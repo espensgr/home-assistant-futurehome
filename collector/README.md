@@ -24,7 +24,8 @@ docker run -p 8787:8787 capabilities-collector
 ## API
 
 - `POST /v1/capabilities`: report from the add-on (`schema: 1`), returns 204
-- `GET /v1/devices`: all stored device variants
+- `GET /`: HTML dashboard of all device variants, grouped by model
+- `GET /v1/devices`: all stored device variants as JSON
 - `GET /health`
 
 ## Storage

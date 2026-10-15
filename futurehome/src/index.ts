@@ -252,7 +252,7 @@ import { reportCapabilities } from './capabilities';
     if (shareCapabilities && !demoMode) {
       await reportCapabilities({
         devices: devices.val.param.device,
-        url: capabilitiesUrl,
+        collectorUrl: capabilitiesUrl,
         addonVersion,
       });
     }
