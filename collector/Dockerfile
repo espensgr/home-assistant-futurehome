@@ -1,9 +1,14 @@
-# Node 24 runs the TypeScript sources directly (type stripping), so there's no build step
-FROM node:24-alpine
+# Bundle the app into one file, so the runtime image only needs Bun itself
+FROM oven/bun:1-alpine AS build
 WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci --omit=dev
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile --production
 COPY src ./src
-USER node
+RUN bun build src/server.ts --target=bun --minify --outfile=dist/server.js
+
+FROM oven/bun:1-alpine
+WORKDIR /app
+COPY --from=build /app/dist/server.js ./
+USER bun
 EXPOSE 8787
-CMD ["node", "src/node.ts"]
+CMD ["bun", "server.js"]
