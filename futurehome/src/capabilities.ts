@@ -32,6 +32,9 @@ export type DeviceCapabilities = {
   fingerprint: string;
 };
 
+// Plain code-unit order: localeCompare depends on the runtime's ICU data
+const byCodeUnit = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+
 function typeOf(value: unknown): string {
   if (Array.isArray(value)) return 'list';
   if (value === null) return 'null';
@@ -40,7 +43,7 @@ function typeOf(value: unknown): string {
 
 export function sanitizeDevice(device: VinculumPd7Device): DeviceCapabilities {
   const services = Object.entries(device.services ?? {})
-    .sort(([a], [b]) => a.localeCompare(b))
+    .sort(([a], [b]) => byCodeUnit(a, b))
     .map(([name, svc]) => ({
       name,
       // e.g. "/rt:dev/rn:zw/ad:1/sv:battery/ad:11_0" → "0"; the node address is dropped
@@ -49,7 +52,7 @@ export function sanitizeDevice(device: VinculumPd7Device): DeviceCapabilities {
       intf: [...(svc?.intf ?? [])].sort(),
       props: Object.fromEntries(
         Object.entries((svc?.props ?? {}) as Record<string, unknown>)
-          .sort(([a], [b]) => a.localeCompare(b))
+          .sort(([a], [b]) => byCodeUnit(a, b))
           .map(([key, value]) => [
             key,
             CAPABILITY_PROP.test(key) ? value : `<${typeOf(value)}>`,

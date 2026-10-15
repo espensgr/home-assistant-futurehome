@@ -60,6 +60,9 @@ function list(value: unknown, max: number, field: string): unknown[] {
   return value;
 }
 
+// Plain code-unit order: localeCompare depends on the runtime's ICU data
+const byCodeUnit = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+
 function typeOf(value: unknown): string {
   if (Array.isArray(value)) return 'list';
   if (value === null) return 'null';
@@ -86,7 +89,10 @@ function service(raw: any, i: number): Service {
   if (Object.keys(props).length > MAX_PROPS) {
     fail(`services[${i}].props has more than ${MAX_PROPS} keys`);
   }
-  if (raw.endpoint != null && !/^\d{1,4}$/.test(raw.endpoint)) {
+  if (
+    raw.endpoint != null &&
+    !(typeof raw.endpoint === 'string' && /^\d{1,4}$/.test(raw.endpoint))
+  ) {
     fail(`services[${i}].endpoint must be a number string`);
   }
   return {
@@ -115,7 +121,7 @@ function device(raw: any, i: number): Device {
     subtype: optionalStr(raw.subtype, `devices[${i}].subtype`),
     services: list(raw.services, MAX_SERVICES, `devices[${i}].services`)
       .map(service)
-      .sort((a, b) => a.name.localeCompare(b.name)),
+      .sort((a, b) => byCodeUnit(a.name, b.name)),
   };
 }
 
