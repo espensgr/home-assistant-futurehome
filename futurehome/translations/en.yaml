@@ -25,3 +25,6 @@ configuration:
     description: Use a sample recorded state from a real Futurehome Smarthub to simulate devices.
   show_debug_log:
     name: Show debug log
+  share_device_capabilities:
+    name: Share device capabilities
+    description: Share which services your device models support (no names, rooms, addresses or readings), to help improve device support.
