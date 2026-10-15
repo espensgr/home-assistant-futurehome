@@ -14,6 +14,13 @@ npm start          # listens on :8787 (PORT to change)
 npm test
 ```
 
+## Docker
+
+```sh
+docker build -t capabilities-collector .
+docker run -p 8787:8787 capabilities-collector
+```
+
 ## API
 
 - `POST /v1/capabilities`: report from the add-on (`schema: 1`), returns 204
