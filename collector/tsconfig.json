@@ -1,16 +1,15 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "preserve",
+    "module": "nodenext",
     "strict": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "erasableSyntaxOnly": true,
     "types": [
-      "bun"
-    ],
-    "moduleResolution": "bundler"
+      "node"
+    ]
   },
   "include": [
     "src"
