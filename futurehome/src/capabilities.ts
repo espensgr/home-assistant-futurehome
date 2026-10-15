@@ -87,7 +87,8 @@ const reported = new Set<string>();
  */
 export async function reportCapabilities(parameters: {
   devices: VinculumPd7Device[];
-  url: string;
+  // Collector base URL, e.g. http://127.0.0.1:8787
+  collectorUrl: string;
   addonVersion: string;
 }) {
   const devices = parameters.devices
@@ -105,13 +106,17 @@ export async function reportCapabilities(parameters: {
     devices,
   };
 
-  if (!parameters.url) {
+  if (!parameters.collectorUrl) {
     log.info(
       `Device capabilities (not sent, no collector URL):\n${JSON.stringify(payload)}`,
     );
   } else {
     try {
-      await axios.post(parameters.url, payload, { timeout: 10000 });
+      await axios.post(
+        `${parameters.collectorUrl.replace(/\/+$/, '')}/v1/capabilities`,
+        payload,
+        { timeout: 10000 },
+      );
       log.info(`Shared capabilities of ${devices.length} device variant(s)`);
     } catch (e) {
       // Retried on the next device list, since nothing is marked as reported
