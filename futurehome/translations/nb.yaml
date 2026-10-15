@@ -22,3 +22,6 @@ configuration:
     description: Bruk en forhåndsopptatt tilstand fra en ekte Futurehome Smarthub for å simulere enheter.
   show_debug_log:
     name: Vis feilsøkingslogg
+  share_device_capabilities:
+    name: Del enhetsfunksjoner
+    description: Del hvilke tjenester enhetsmodellene dine støtter (ingen navn, rom, adresser eller målinger), for å forbedre støtten for enheter.

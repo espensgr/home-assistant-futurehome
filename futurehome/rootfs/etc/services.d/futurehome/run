@@ -14,6 +14,8 @@ export TP_ALLOW_EMPTY=${TP_ALLOW_EMPTY:-$(bashio::config 'tp_allow_empty')}
 export IGNORE_AVAILABILITY_REPORTS=${IGNORE_AVAILABILITY_REPORTS:-$(bashio::config 'ignore_availability_reports')}
 export DEMO_MODE=${DEMO_MODE:-$(bashio::config 'demo_mode')}
 export SHOW_DEBUG_LOG=${SHOW_DEBUG_LOG:-$(bashio::config 'show_debug_log')}
+export SHARE_DEVICE_CAPABILITIES=${SHARE_DEVICE_CAPABILITIES:-$(bashio::config 'share_device_capabilities')}
+export ADDON_VERSION=${ADDON_VERSION:-$(bashio::addon.version)}
 
 export MQTT_HOST=${MQTT_HOST:-$(bashio::services mqtt "host")}
 export MQTT_PORT=${MQTT_PORT:-$(bashio::services mqtt "port")}
