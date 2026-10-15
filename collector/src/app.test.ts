@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createApp } from './app.ts';
 import { MemoryStore } from './store.ts';
+import { parseReport } from './capabilities.ts';
 
 const report = (overrides: Record<string, unknown> = {}) => ({
   schema: 1,
@@ -66,6 +67,7 @@ test('rejects malformed reports', async () => {
     { schema: 2, devices: [] },
     report({ services: 'nope' }),
     report({ model: 'x'.repeat(500) }),
+    report({ services: [{ name: 'a', endpoint: [7], intf: [] }] }),
     { schema: 1, devices: Array(201).fill(report().devices[0]) },
   ]) {
     assert.equal(
@@ -85,4 +87,27 @@ test('rejects malformed reports', async () => {
     400,
   );
   assert.deepEqual(await (await app.request('/v1/devices')).json(), []);
+});
+
+test('fingerprint ignores the order of services, intf and props', () => {
+  const svc = (name: string) => ({
+    name,
+    endpoint: '0',
+    enabled: true,
+    intf: ['b', 'A', 'a'],
+    props: { sup_b: 1, Sup_a: 2, is_c: true },
+  });
+  const reversed = (s: ReturnType<typeof svc>) => ({
+    ...s,
+    intf: [...s.intf].reverse(),
+    props: Object.fromEntries(Object.entries(s.props).reverse()),
+  });
+  const fp = (services: unknown[]) =>
+    parseReport({ schema: 1, devices: [{ model: 'm', services }] }).devices[0]
+      .fingerprint;
+
+  assert.equal(
+    fp([svc('battery'), svc('Basic'), svc('sensor_temp')]),
+    fp([reversed(svc('sensor_temp')), svc('battery'), reversed(svc('Basic'))]),
+  );
 });
