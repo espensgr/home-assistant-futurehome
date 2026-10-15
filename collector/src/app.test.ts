@@ -111,3 +111,14 @@ test('fingerprint ignores the order of services, intf and props', () => {
     fp([reversed(svc('sensor_temp')), svc('battery'), reversed(svc('Basic'))]),
   );
 });
+
+test('dashboard lists devices and escapes what clients send', async () => {
+  const app = createApp(new MemoryStore());
+  await post(app, report({ model_alias: '<script>alert(1)</script>' }));
+
+  const page = await (await app.request('/')).text();
+  assert.ok(page.includes('zw_271_2049_4098'));
+  assert.ok(page.includes('sensor_temp'));
+  assert.ok(!page.includes('<script>alert(1)'));
+  assert.ok(page.includes('&lt;script&gt;'));
+});

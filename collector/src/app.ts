@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { bodyLimit } from 'hono/body-limit';
 import { InvalidReport, parseReport } from './capabilities.ts';
 import type { Store } from './store.ts';
+import { dashboard } from './dashboard.ts';
 
 // shortcut: no rate limiting, add it (or put the app behind a WAF rule) before going live
 export function createApp(store: Store) {
@@ -40,6 +41,7 @@ export function createApp(store: Store) {
   );
 
   app.get('/v1/devices', async (c) => c.json(await store.list()));
+  app.get('/', async (c) => c.html(dashboard(await store.list())));
 
   return app;
 }
