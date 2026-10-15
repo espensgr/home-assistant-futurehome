@@ -1,14 +1,17 @@
-# Bundle the app into one file, so the runtime image only needs Bun itself
-FROM oven/bun:1-alpine AS build
+# Multi-stage: install deps with npm, then run on bare Alpine with only the node binary (no npm/yarn)
+# Node runs the TypeScript sources directly (type stripping), so there's no build step
+FROM node:24-alpine AS deps
 WORKDIR /app
-COPY package.json bun.lock ./
-RUN bun install --frozen-lockfile --production
-COPY src ./src
-RUN bun build src/server.ts --target=bun --minify --outfile=dist/server.js
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
 
-FROM oven/bun:1-alpine
+FROM alpine:3
+RUN apk add --no-cache libstdc++ libgcc
+COPY --from=deps /usr/local/bin/node /usr/local/bin/node
 WORKDIR /app
-COPY --from=build /app/dist/server.js ./
-USER bun
+COPY --from=deps /app/node_modules ./node_modules
+COPY package.json ./
+COPY src ./src
+USER nobody
 EXPOSE 8787
-CMD ["bun", "server.js"]
+CMD ["node", "src/server.ts"]

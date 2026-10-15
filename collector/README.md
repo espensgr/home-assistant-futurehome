@@ -6,12 +6,12 @@ It re-validates every report: only capability-style props keep their value, and 
 
 ## Run locally
 
-Runs on [Bun](https://bun.sh), which runs the TypeScript directly.
+Requires Node 23.6+ (runs the TypeScript directly). The code only uses Hono and web standards, so it can also run on Bun or Workers with a different entry point.
 
 ```sh
-bun install
-bun start          # listens on :8787 (PORT to change)
-bun test
+npm install
+npm start          # listens on :8787 (PORT to change)
+npm test
 ```
 
 ## Docker
