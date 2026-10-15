@@ -1,0 +1,23 @@
+{
+  "name": "futurehome-capabilities-collector",
+  "private": true,
+  "type": "module",
+  "description": "Collects the opt-in device capabilities shared by the Futurehome add-on",
+  "engines": {
+    "node": ">=23.6"
+  },
+  "scripts": {
+    "start": "node src/node.ts",
+    "test": "node --test 'src/**/*.test.ts'",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.5",
+    "hono": "^4.13.13"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^5.8.3"
+  },
+  "license": "MIT"
+}

@@ -25,6 +25,7 @@ options:
   ignore_availability_reports: false
   demo_mode: false
   show_debug_log: false
+  share_device_capabilities: false
 
 schema:
   hub_ip: 'str?'
@@ -36,5 +37,6 @@ schema:
   ignore_availability_reports: 'bool?'
   demo_mode: 'bool?'
   show_debug_log: 'bool?'
+  share_device_capabilities: 'bool?'
 
 image: 'ghcr.io/adrianjagielak/{arch}-home-assistant-futurehome'

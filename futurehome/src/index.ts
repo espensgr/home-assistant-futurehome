@@ -26,6 +26,7 @@ import {
   publishHubModeFromHouseResponse,
 } from './ha/hub_mode';
 import { publishSceneEvent } from './ha/scene_events';
+import { reportCapabilities } from './capabilities';
 
 (async () => {
   const hubIp = process.env.FH_HUB_IP || 'futurehome-smarthub.local';
@@ -45,6 +46,11 @@ import { publishSceneEvent } from './ha/scene_events';
   const showDebugLog = (process.env.SHOW_DEBUG_LOG || '')
     .toLowerCase()
     .includes('true');
+  const shareCapabilities = (process.env.SHARE_DEVICE_CAPABILITIES || '')
+    .toLowerCase()
+    .includes('true');
+  const capabilitiesUrl = process.env.CAPABILITIES_URL || '';
+  const addonVersion = process.env.ADDON_VERSION || 'unknown';
 
   const mqttHost = process.env.MQTT_HOST || '';
   const mqttPort = Number(process.env.MQTT_PORT || '1883');
@@ -238,6 +244,14 @@ import { publishSceneEvent } from './ha/scene_events';
       }).commandHandlers,
     );
     setHaCommandHandlers(commandHandlers);
+
+    if (shareCapabilities && !demoMode) {
+      await reportCapabilities({
+        devices: devices.val.param.device,
+        url: capabilitiesUrl,
+        addonVersion,
+      });
+    }
   };
   vinculumDevicesToHa(devices);
 
