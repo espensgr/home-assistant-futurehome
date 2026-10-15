@@ -6,12 +6,12 @@ It re-validates every report: only capability-style props keep their value, and 
 
 ## Run locally
 
-Requires Node 23.6+ (runs TypeScript directly).
+Runs on [Bun](https://bun.sh), which runs the TypeScript directly.
 
 ```sh
-npm install
-npm start          # listens on :8787 (PORT to change)
-npm test
+bun install
+bun start          # listens on :8787 (PORT to change)
+bun test
 ```
 
 ## Docker
